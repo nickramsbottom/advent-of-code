@@ -17,9 +17,18 @@ function isPasswordCompliant({lower, upper, password, char}) {
 	const charOne = password.charAt(lower - 1);
 	const charTwo = password.charAt(upper - 1);
 
-	return !(charOne === char && charTwo === char);
+	if (charOne === char && charTwo === char) {
+		return false;
+	}
+
+	return charOne === char || charTwo === char;
 }
 
+// const parsed = parseInputLine(input);
+// console.log(parsed);
+
+// const valid = isPasswordCompliant(parsed);
+// console.log(valid);
 
 const numberValidLines = input.reduce(
 	(numberValid, line) => {
