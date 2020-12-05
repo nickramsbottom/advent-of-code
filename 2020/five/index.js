@@ -1,47 +1,19 @@
 const fs = require('fs');
 const input = fs.readFileSync('./input.txt', 'utf8').split('\n');
 
-const exampleCode = ['F', 'B', 'F', 'B', 'B', 'F', 'F', 'R', 'L', 'R'];
-
-function calculateRow(code) {
-	let higherIndex = Math.pow(2, code.length) - 1;
-	let lowerIndex = 0;
-
-	for (const char of code) {
-		const length = higherIndex - lowerIndex;
-		const distance = (length - 1) / 2;
-
-		if (char === 'F' || char === 'L') {
-			higherIndex -= (distance + 1);
-		}
-
-		if (char === 'B' || char === 'R') {
-			lowerIndex += (distance + 1);
-		}
-	}
-
-	return lowerIndex;
-}
+const exampleCode = ['F', 'B', 'F', 'B', 'B', 'F', 'F', 'R', 'L', 'R'].join('');
 
 function calculateSeatId(barcode) {
-	const rowPortion = barcode.slice(0, 7);
-	const seatPortion = barcode.slice(7);
+	const binary = barcode
+		.replaceAll('F', 0)
+		.replaceAll('B', 1)
+		.replaceAll('R', 1)
+		.replaceAll('L', 0);
 
-	return (8 * calculateRow(rowPortion)) + calculateRow(seatPortion);
+	return parseInt(binary, 2);
 }
 
-const highestSeatId = input.reduce(
-	(highestId, code) => {
-		const newSeatId = calculateSeatId(code);
-
-		if (newSeatId > highestId) {
-			highestId = newSeatId;
-		}
-
-		return highestId;
-	},
-	0
-);
+console.log(calculateSeatId(exampleCode));
 
 const seatIds = input.map(calculateSeatId).sort((a, b) => a - b);
 
