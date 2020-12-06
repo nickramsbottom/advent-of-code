@@ -7,9 +7,21 @@ for (const group of input) {
 	for (const answers of group) {
 		const chars = answers.split('');
 		for (const char of chars) {
-			seenAnswers[char] = true;
+			if (seenAnswers[char]) {
+				seenAnswers[char]++;
+			} else {
+				seenAnswers[char] = 1;
+			}
 		}
 	}
-	count += Object.keys(seenAnswers).length;
+
+	const sizeOfGroup = group.length;
+	const answerKeys = Object.keys(seenAnswers);
+
+	for (const key of answerKeys) {
+		if(seenAnswers[key] === sizeOfGroup) {
+			count++;
+		}
+	}
 }
 console.log(count);
