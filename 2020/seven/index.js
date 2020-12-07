@@ -52,8 +52,6 @@ function countBagType(bagName, bagType) {
 	return bagCount;
 };
 
-console.log(parsedRules);
-
 const bagNames = Object.keys(parsedRules);
 
 const canContain = bagNames
@@ -62,3 +60,15 @@ const canContain = bagNames
 	.length;
 
 console.log(canContain);
+
+function countNumberOfBagsInside(bagName) {
+	const bagsInside = parsedRules[bagName];
+
+	let bagCount = 0;
+	for (const bag of bagsInside) {
+		bagCount += bag.number + bag.number * countNumberOfBagsInside(bag.name);
+	}
+	return bagCount;
+};
+
+console.log(countNumberOfBagsInside('shiny gold'));
