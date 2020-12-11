@@ -1,13 +1,87 @@
-// Part one = 2275
-// 94
-// Part two = 2121
-// 86
-
 const fs = require('fs');
 const input = fs.readFileSync('./input.txt', 'utf8').split('\n').map(row => row.split(''));
 
 let currentLayout = JSON.parse(JSON.stringify(input));
 let newLayout;
+
+function checkSeatsPart1(grid, i, j) {
+	let adjacentOccupied = [];
+
+	adjacentOccupied.push(grid[i-1] && grid[i-1][j-1]);
+	adjacentOccupied.push(grid[i-1] && grid[i-1][j]);
+	adjacentOccupied.push(grid[i-1] && grid[i-1][j+1]);
+
+	adjacentOccupied.push(grid[i] && grid[i][j-1]);
+	adjacentOccupied.push(grid[i] && grid[i][j+1]);
+
+	adjacentOccupied.push(grid[i+1] && grid[i+1][j-1]);
+	adjacentOccupied.push(grid[i+1] && grid[i+1][j]);
+	adjacentOccupied.push(grid[i+1] && grid[i+1][j+1]);
+
+	return adjacentOccupied.filter(char => char === '#').length;
+}
+
+function checkSeatsPart2(grid, i, j){
+	let occupiedSeats = 0;
+
+	for (let y = i-1; y > -1; y--) {
+		if (grid[y][j]!=='.') {
+			grid[y][j]=='#' ? occupiedSeats++ : undefined;
+			break;
+		}
+	}
+
+	for (let y = i+1; y < grid.length; y++) {
+		if (grid[y][j]!=='.') {
+			grid[y][j]=='#' ? occupiedSeats++ : undefined;
+			break;
+		}
+	}
+
+	for (let x = j+1; x < grid[0].length; x++) {
+		if (grid[i][x]!=='.') {
+			grid[i][x]=='#' ? occupiedSeats++ : undefined;
+			break;
+		}
+	}
+
+	for (let x = j-1; x > -1; x--) {
+		if (grid[i][x]!=='.') {
+			grid[i][x]=='#' ? occupiedSeats++ : undefined;
+			break;
+		}
+	}
+
+	for (let x = j-1, y = i-1; x > -1, y > -1; x--, y--) {
+		if (grid[y][x]!=='.') {
+			grid[y][x]=='#' ? occupiedSeats++ : undefined;
+			break;
+		}
+	}
+
+	for (let x = j+1, y = i-1; x < grid[0].length, y > -1; x++, y--) {
+		if (grid[y][x]!=='.') {
+			grid[y][x]=='#' ? occupiedSeats++ : undefined;
+			break;
+		}
+	}
+
+	for (let x = j+1, y = i+1; x < grid[0].length, y < grid.length; x++, y++) {
+		if (grid[y][x]!=='.') {
+			grid[y][x]=='#' ? occupiedSeats++ : undefined;
+			break;
+		}
+	}
+
+	for (let x = j-1, y = i+1; x > -1, y < grid.length; x--, y++) {
+		if (grid[y][x]!=='.') {
+			grid[y][x]=='#' ? occupiedSeats++ : undefined;
+			break;
+		}
+	}
+
+	return occupiedSeats;
+}
 
 let searching = true;
 while (searching) {
@@ -26,20 +100,7 @@ while (searching) {
 				continue;
 			}
 
-			let adjacentOccupied = [];
-
-			adjacentOccupied.push(currentLayout[i-1] && currentLayout[i-1][j-1]);
-			adjacentOccupied.push(currentLayout[i-1] && currentLayout[i-1][j]);
-			adjacentOccupied.push(currentLayout[i-1] && currentLayout[i-1][j+1]);
-
-			adjacentOccupied.push(currentLayout[i] && currentLayout[i][j-1]);
-			adjacentOccupied.push(currentLayout[i] && currentLayout[i][j+1]);
-
-			adjacentOccupied.push(currentLayout[i+1] && currentLayout[i+1][j-1]);
-			adjacentOccupied.push(currentLayout[i+1] && currentLayout[i+1][j]);
-			adjacentOccupied.push(currentLayout[i+1] && currentLayout[i+1][j+1]);
-
-			const occupiedSeats = adjacentOccupied.filter(char => char === '#').length;
+			const occupiedSeats = checkSeatsPart2(currentLayout, i, j);
 
 			if (seat === 'L' && occupiedSeats === 0) {
 				searching = true;
@@ -47,7 +108,7 @@ while (searching) {
 				continue;
 			}
 
-			if (seat === '#' && occupiedSeats  >= 4) {
+			if (seat === '#' && occupiedSeats  >= 5) {
 				searching = true;
 				newLayout[i].push('L');
 				continue;
