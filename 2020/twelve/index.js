@@ -12,56 +12,59 @@ const input = fs
 		}
 	});
 
-const movement = {
-	N: 0,
-	S: 0,
-	E: 0,
-	W: 0,
-};
+// N, E
+let movement = [0, 0];
 
-const translation = {
-	0: 'N',
-	90: 'E',
-	180: 'S',
-	270: 'W',
-}
-
-let degrees = 90;
+// N, E
+let waypointPosition = [1, 10];
 
 for (const instruction of input) {
 	const { action, value } = instruction;
 
-	if (movement[action] !== undefined) {
-		movement[action] += value;
-		continue;
-	}
-
-	if (action === 'L') {
-		degrees = (degrees - value) % 360;
-
-		while (degrees < 0) {
-			degrees += 360;
-		}
-
-		continue;
-	}
-
-	if (action === 'R') {
-		degrees = (degrees + value) % 360;
-
-		while (degrees < 0) {
-			degrees += 360;
-		}
-
-		continue;
-	}
-
-	if (action === 'F') {
-		const direction = translation[degrees];
-		movement[direction] += value;
-		continue;
+	switch(action) {
+		case 'F':
+			movement[0] += waypointPosition[0] * value;
+			movement[1] += waypointPosition[1] * value;
+			break;
+		case 'N':
+			waypointPosition[0] += value;
+			break;
+		case 'S':
+			waypointPosition[0] -= value;
+			break;
+		case 'E':
+			waypointPosition[1] += value;
+			break;
+		case 'W':
+			waypointPosition[1] -= value;
+			break;
+		case 'L':
+			switch(value) {
+				case 90:
+					waypointPosition = [waypointPosition[1], -waypointPosition[0]];
+					break;
+				case 180:
+					waypointPosition = [-waypointPosition[0], -waypointPosition[1]];
+					break;
+				case 270:
+					waypointPosition = [-waypointPosition[1], waypointPosition[0]];
+					break;
+			}
+			break;
+		case 'R':
+			switch(value) {
+				case 90:
+					waypointPosition = [-waypointPosition[1], waypointPosition[0]];
+					break;
+				case 180:
+					waypointPosition = [-waypointPosition[0], -waypointPosition[1]];
+					break;
+				case 270:
+					waypointPosition = [waypointPosition[1], -waypointPosition[0]];
+					break;
+			}
+			break;
 	}
 }
 
-const result = Math.abs(movement.N - movement.S) + Math.abs(movement.E  - movement.W);
-console.log(result);
+console.log(Math.abs(movement[0]) + Math.abs(movement[1]));
