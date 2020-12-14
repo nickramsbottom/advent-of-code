@@ -5,13 +5,44 @@ const [estimate, busIds] = input;
 
 const buses = busIds
 	.split(',')
-	.filter(id => id !== 'x')
-	.map(id => Number(id));
+	.reduce(
+		(list, id, i) => {
 
-const waitTimes = buses.map(id => id - estimate%id);
+			if (id !== 'x') {
+				list.push({
+					id: Number(id),
+					offset: i,
+				})
+			}
+			return list;
+		},
+		[]
+	);
 
-const smallestWait = Math.min(...waitTimes);
-const indexOfSmallest = waitTimes.indexOf(smallestWait);
+// const waitTimes = buses.map(id => id - estimate%id);
 
-const idWait = smallestWait * buses[indexOfSmallest];
-console.log(idWait);
+// const smallestWait = Math.min(...waitTimes);
+// const indexOfSmallest = waitTimes.indexOf(smallestWait);
+
+// const idWait = smallestWait * buses[indexOfSmallest];
+// console.log(idWait);
+
+const [firstBus, ...otherBuses] = buses;
+
+let multiplier = firstBus.id;
+let i = 0;
+
+for (const bus of otherBuses) {
+	while(true) {
+		const { id, offset } = bus;
+
+		if ((i + offset) % id === 0) {
+			multiplier *= id;
+			break;
+		}
+
+		i += multiplier;
+	}
+}
+
+console.log(i);
