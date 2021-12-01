@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
@@ -11,17 +12,14 @@ fn main() {
         .map(|line| line.unwrap().parse::<usize>().unwrap())
         .collect();
 
-    let mut sum = ns[0] + ns[1] + ns[2];
-    let mut c = 0;
-    for w in ns.windows(3).skip(1) {
-        let new_sum = w.iter().sum();
+    let n = ns
+        .iter()
+        .tuple_windows()
+        .filter(|w| {
+            let (a, _, _, d) = w;
+            d > a
+        })
+        .count();
 
-        if new_sum > sum {
-            c += 1;
-        }
-
-        sum = new_sum;
-    }
-
-    println!("{}", c)
+    println!("{}", n)
 }
