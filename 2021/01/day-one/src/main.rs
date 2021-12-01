@@ -11,7 +11,12 @@ fn main() {
         .map(|line| line.unwrap().parse::<usize>().unwrap())
         .collect();
 
-    for n in ns {
-        println!("{}", n);
+    let mut c = 0;
+    for i in 1..ns.len() {
+        if ns[i] > ns[i - 1] {
+            c += 1;
+        }
     }
+
+    println!("{}", c)
 }
