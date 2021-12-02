@@ -10,6 +10,7 @@ fn main() {
 
     let mut depth = 0;
     let mut hor = 0;
+    let mut aim = 0;
 
     for n in ns {
         let split = n.split(' ').collect::<Vec<&str>>();
@@ -17,9 +18,12 @@ fn main() {
         let amt = split[1].parse::<i32>().unwrap();
 
         match dir {
-            "forward" => hor += amt,
-            "down" => depth += amt,
-            "up" => depth -= amt,
+            "forward" => {
+                hor += amt;
+                depth += aim * amt
+            }
+            "down" => aim += amt,
+            "up" => aim -= amt,
             _ => println!("Invalid input"),
         }
     }
