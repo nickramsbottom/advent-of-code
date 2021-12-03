@@ -4,35 +4,44 @@ use std::io::BufReader;
 
 fn main() {
     let input = read_input("./input.txt");
-    let row_count = input.len();
-    let width = input[0].len();
+    // println!("{}", part_1(input));
+    println!(
+        "part 2: {}",
+        isize::from_str_radix(&part_2(input.clone()), 2).unwrap()
+    );
+    // println!("{}", part_2(input.clone()));
+}
 
-    let mut gamma = String::new();
-    let mut epsilon = String::new();
+fn part_2(mut input: Vec<String>) -> String {
+    let mut pos = 0;
+    let mut out = String::new();
 
-    for i in 0..width {
-        let mut ones_count = 0;
-        for line in &input {
-            if line.chars().nth(i).unwrap() == '1' {
-                ones_count += 1;
-            }
+    while input.len() > 0 {
+        if input.len() == 1 {
+            out = input[0].clone();
+            break;
         }
-        if ones_count > row_count / 2 {
-            gamma += "1";
-            epsilon += "0";
-        } else {
-            gamma += "0";
-            epsilon += "1";
-        }
+
+        let ones = input
+            .iter()
+            .filter(|line| line.chars().nth(pos).unwrap() == '1')
+            .count();
+        let zeroes = input.len() - ones;
+
+        let bit = if ones >= zeroes { '0' } else { '1' };
+        input = input
+            .iter()
+            .filter(|line| line.chars().nth(pos).unwrap() == bit)
+            .cloned()
+            .collect();
+        pos += 1;
     }
 
-    let gamm_dec = isize::from_str_radix(&gamma, 2).unwrap();
-    let epsi_dec = isize::from_str_radix(&epsilon, 2).unwrap();
-
-    println!("{}", gamm_dec);
-    println!("{}", epsi_dec);
-    println!("{}", gamm_dec * epsi_dec);
+    out
 }
+
+// 1719
+// 2400
 
 fn read_input(dir: &str) -> Vec<String> {
     let f = File::open(dir).unwrap();
