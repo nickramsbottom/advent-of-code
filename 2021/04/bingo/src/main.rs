@@ -19,10 +19,13 @@ fn main() {
     for call in calls {
         for card in &mut cards {
             card.mark(call);
-            let won = card.bingo();
+        }
 
-            if won {
-                println!("{:?}", card.score() * call);
+        if cards.len() > 1 {
+            cards.retain(|card| !card.bingo());
+        } else {
+            if cards[0].bingo() {
+                println!("{}", cards[0].score() * call);
                 return;
             }
         }
