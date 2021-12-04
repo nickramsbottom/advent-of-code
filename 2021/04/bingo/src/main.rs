@@ -4,7 +4,7 @@ fn main() {
     let input = read_to_string("./input.txt").expect("failed to open input file");
     let mut lines: Vec<_> = input.split("\n").filter(|s| s != &"").collect();
 
-    let calls: Vec<u32> = lines
+    let calls: Vec<i32> = lines
         .remove(0)
         .split(",")
         .map(|s| s.parse().unwrap())
@@ -13,22 +13,35 @@ fn main() {
     let mut cards: Vec<Card> = Vec::new();
 
     for group in 0..(lines.len() / 5) {
-        cards.push(Card::new(&lines[group..group + 5]));
+        cards.push(Card::new(&lines[group * 5..(group * 5) + 5], group));
     }
 
     println!("{:?}", cards);
+
+    for call in calls {
+        for card in &mut cards {
+            card.mark(call);
+            let won = card.bingo();
+
+            if won {
+                println!("{:?}", card);
+                return;
+            }
+        }
+    }
 }
 
 #[derive(Debug)]
 struct Card {
-    pub lines: Vec<Vec<u32>>,
+    pub index: usize,
+    lines: Vec<Vec<i32>>,
 }
 
 impl Card {
-    pub fn new(lines: &[&str]) -> Card {
+    pub fn new(lines: &[&str], index: usize) -> Card {
         let mut stored_lines = Vec::new();
         for line in lines {
-            let values: Vec<u32> = line
+            let values: Vec<i32> = line
                 .trim()
                 .split(" ")
                 .filter(|s| s != &"")
@@ -37,7 +50,38 @@ impl Card {
             stored_lines.push(values);
         }
         Card {
+            index,
             lines: stored_lines,
         }
+    }
+
+    pub fn mark(&mut self, call: i32) {
+        for i in 0..self.lines.len() {
+            for j in 0..self.lines[i].len() {
+                if self.lines[i][j] == call {
+                    self.lines[i][j] = -1
+                }
+            }
+        }
+    }
+
+    pub fn bingo(&self) -> bool {
+        for line in &self.lines {
+            if line.iter().sum::<i32>() == -5 {
+                return true;
+            }
+        }
+
+        for j in 0..self.lines[0].len() {
+            let mut sum = 0;
+            for i in 0..self.lines.len() {
+                sum += self.lines[i][j];
+            }
+            if sum == -5 {
+                return true;
+            }
+        }
+
+        false
     }
 }
