@@ -16,15 +16,13 @@ fn main() {
         cards.push(Card::new(&lines[group * 5..(group * 5) + 5], group));
     }
 
-    println!("{:?}", cards);
-
     for call in calls {
         for card in &mut cards {
             card.mark(call);
             let won = card.bingo();
 
             if won {
-                println!("{:?}", card);
+                println!("{:?}", card.score() * call);
                 return;
             }
         }
@@ -83,5 +81,19 @@ impl Card {
         }
 
         false
+    }
+
+    pub fn score(&self) -> i32 {
+        let mut sum = 0;
+
+        for line in &self.lines {
+            for number in line {
+                if number > &-1 {
+                    sum += number;
+                }
+            }
+        }
+
+        sum
     }
 }
