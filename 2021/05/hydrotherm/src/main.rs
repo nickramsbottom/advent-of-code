@@ -30,6 +30,7 @@ fn occupied_points(lines: Vec<((i32, i32), (i32, i32))>) -> i32 {
                 let count = points.entry((x1, y)).or_insert(0);
                 *count += 1;
             }
+            continue;
         }
 
         if y1 == y2 {
@@ -37,6 +38,23 @@ fn occupied_points(lines: Vec<((i32, i32), (i32, i32))>) -> i32 {
             for x in range {
                 let count = points.entry((x, y1)).or_insert(0);
                 *count += 1;
+            }
+            continue;
+        }
+
+        if (x1 != x2) & (y1 != y2) {
+            let dx = if x1 < x2 { 1 } else { -1 };
+            let dy = if y1 < y2 { 1 } else { -1 };
+
+            let mut x = x1;
+            let mut y = y1;
+
+            while (x, y) != (x2 + dx, y2 + dy) {
+                let count = points.entry((x, y)).or_insert(0);
+                *count += 1;
+
+                y += dy;
+                x += dx;
             }
         }
     }
