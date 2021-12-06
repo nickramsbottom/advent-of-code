@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::fs::read_to_string;
 
 fn main() {
@@ -11,35 +10,22 @@ fn main() {
     println!("{}", count_fish(lines));
 }
 
-fn count_fish(start: Vec<i64>) -> i64 {
-    let mut counts = HashMap::new();
-
-    for x in 0..=8 {
-        counts.insert(x, 0);
-    }
+fn count_fish(start: Vec<usize>) -> u64 {
+    let mut counts = [0u64; 9];
 
     for day in start {
-        let count = counts.entry(day).or_insert(0);
-        *count += 1;
+        counts[day] += 1;
     }
 
     for _ in 1..=256 {
-        let zero_count = counts.get(&0).unwrap().clone();
+        let zero_count = counts[0];
         for num in 1..=8 {
-            let today_count = counts.get(&num).unwrap().clone();
-            counts.insert(num - 1, today_count);
+            let today_count = counts[num];
+            counts[num - 1] = today_count;
         }
-        counts.insert(8, zero_count);
-
-        let six_count = counts.entry(6).or_insert(0);
-        *six_count = *six_count + zero_count;
+        counts[8] = zero_count;
+        counts[6] = counts[6] + zero_count;
     }
 
-    let mut count = 0;
-
-    for x in 0..=8 {
-        count += counts.get(&x).unwrap();
-    }
-
-    count
+    counts.iter().sum()
 }
