@@ -17,14 +17,9 @@ fn count_fish(start: Vec<usize>) -> u64 {
         counts[day] += 1;
     }
 
-    for _ in 1..=256 {
-        let zero_count = counts[0];
-        for num in 1..=8 {
-            let today_count = counts[num];
-            counts[num - 1] = today_count;
-        }
-        counts[8] = zero_count;
-        counts[6] = counts[6] + zero_count;
+    for _ in 0..256 {
+        counts.rotate_left(1);
+        counts[6] += counts[8];
     }
 
     counts.iter().sum()
