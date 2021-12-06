@@ -23,7 +23,7 @@ fn count_fish(start: Vec<i64>) -> i64 {
         *count += 1;
     }
 
-    for _ in 1..=80 {
+    for _ in 1..=256 {
         let zero_count = counts.get(&0).unwrap().clone();
         for num in 1..=8 {
             let today_count = counts.get(&num).unwrap().clone();
