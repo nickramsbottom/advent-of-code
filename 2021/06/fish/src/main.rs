@@ -6,7 +6,6 @@ fn main() {
 
     let lines = input_strings.map(|s| s.parse().unwrap()).collect();
 
-    // let lines = vec![3, 4, 3, 1, 2];
     println!("{}", count_fish(lines));
 }
 
