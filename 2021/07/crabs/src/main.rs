@@ -13,15 +13,12 @@ fn find_fuel(positions: Vec<isize>) -> isize {
     let length = positions.len();
     let sum: isize = positions.iter().sum();
     let mean = (sum as f32 / length as f32).floor();
-    let mut fuel = 0;
 
-    for pos in positions {
+    positions.iter().fold(0, |fuel, pos| {
         let diff = mean as isize - pos;
         let diff_pos = diff.abs();
-        fuel += cost(diff_pos);
-    }
-
-    fuel
+        fuel + cost(diff_pos)
+    })
 }
 
 fn cost(dist: isize) -> isize {
