@@ -2,11 +2,11 @@ use std::fs::read_to_string;
 
 fn main() {
     let input = read_to_string("./input.txt").expect("failed to open input file");
-    let mut lines: Vec<_> = input.split("\n").filter(|s| s != &"").collect();
+    let mut lines: Vec<_> = input.split('\n').filter(|s| s != &"").collect();
 
     let calls: Vec<i32> = lines
         .remove(0)
-        .split(",")
+        .split(',')
         .map(|s| s.parse().unwrap())
         .collect();
 
@@ -23,11 +23,9 @@ fn main() {
 
         if cards.len() > 1 {
             cards.retain(|card| !card.bingo());
-        } else {
-            if cards[0].bingo() {
-                println!("{}", cards[0].score() * call);
-                return;
-            }
+        } else if cards[0].bingo() {
+            println!("{}", cards[0].score() * call);
+            return;
         }
     }
 }
@@ -44,7 +42,7 @@ impl Card {
         for line in lines {
             let values: Vec<i32> = line
                 .trim()
-                .split(" ")
+                .split(' ')
                 .filter(|s| s != &"")
                 .map(|s| s.parse().unwrap())
                 .collect();

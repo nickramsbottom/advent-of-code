@@ -3,16 +3,16 @@ use std::fs::read_to_string;
 
 fn main() {
     let input = read_to_string("./input.txt").expect("failed to open input file");
-    let input_lines: Vec<_> = input.split("\n").collect();
+    let input_lines: Vec<_> = input.split('\n').collect();
 
     let lines: Vec<((i32, i32), (i32, i32))> = input_lines
         .iter()
         .map(|s| {
             let parts: Vec<_> = s.split(" -> ").collect();
-            let start: Vec<i32> = parts[0].split(",").map(|s| s.parse().unwrap()).collect();
-            let end: Vec<i32> = parts[1].split(",").map(|s| s.parse().unwrap()).collect();
+            let start: Vec<i32> = parts[0].split(',').map(|s| s.parse().unwrap()).collect();
+            let end: Vec<i32> = parts[1].split(',').map(|s| s.parse().unwrap()).collect();
 
-            return ((start[0], start[1]), (end[0], end[1]));
+            ((start[0], start[1]), (end[0], end[1]))
         })
         .collect();
     println!("{}", occupied_points(lines));

@@ -2,7 +2,7 @@ use std::fs::read_to_string;
 
 fn main() {
     let input = read_to_string("./input.txt").expect("failed to open input file");
-    let input_strings = input.split(",");
+    let input_strings = input.split(',');
 
     let lines = input_strings.map(|s| s.parse().unwrap()).collect();
 
