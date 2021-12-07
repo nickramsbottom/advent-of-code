@@ -9,17 +9,21 @@ fn main() {
     println!("{}", find_fuel(positions));
 }
 
-fn find_fuel(mut positions: Vec<i32>) -> i32 {
-    positions.sort();
+fn find_fuel(positions: Vec<isize>) -> isize {
     let length = positions.len();
-    let median = positions[length / 2];
-
-    let mut fuel: i32 = 0;
+    let sum: isize = positions.iter().sum();
+    let mean = (sum as f32 / length as f32).floor();
+    let mut fuel = 0;
 
     for pos in positions {
-        let diff = (median - pos).abs();
-        fuel += diff;
+        let diff = mean as isize - pos;
+        let diff_pos = diff.abs();
+        fuel += cost(diff_pos);
     }
 
     fuel
+}
+
+fn cost(dist: isize) -> isize {
+    (dist * (dist + 1)) / 2
 }
