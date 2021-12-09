@@ -19,21 +19,19 @@ fn calc_risk_level(map: Vec<Vec<u32>>) -> u32 {
             let i = i as i32;
             let j = j as i32;
 
-            let n: Vec<(i32, i32)> = vec![(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)];
             let width = row.len() as i32;
             let height = map.len() as i32;
+            let neighbours = find_neighbours((i, j), width, height);
 
             let mut is_low = true;
 
-            for p in n {
+            for p in neighbours {
                 let (x, y) = p;
-                if (x >= 0) & (x < height) & (y >= 0) & (y < width) {
-                    let neighbour = map[x as usize][y as usize];
+                let neighbour = map[x as usize][y as usize];
 
-                    if point >= &neighbour {
-                        is_low = false;
-                        break;
-                    }
+                if point >= &neighbour {
+                    is_low = false;
+                    break;
                 }
             }
 
@@ -44,4 +42,17 @@ fn calc_risk_level(map: Vec<Vec<u32>>) -> u32 {
     }
 
     risk_level
+}
+
+fn find_neighbours(point: (i32, i32), width: i32, height: i32) -> Vec<(i32, i32)> {
+    let (i, j) = point;
+    let candidates: Vec<(i32, i32)> = vec![(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)];
+
+    candidates
+        .into_iter()
+        .filter(|c| {
+            let (x, y) = c;
+            (x >= &0) & (x < &height) & (y >= &0) & (y < &width)
+        })
+        .collect()
 }
