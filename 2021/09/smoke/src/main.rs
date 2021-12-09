@@ -12,7 +12,22 @@ fn main() {
 }
 
 fn calc_risk_level(map: Vec<Vec<u32>>) -> u32 {
+    let low_points = calc_low_points(&map);
+
     let mut risk_level = 0;
+
+    for p in low_points {
+        let x = p.0 as usize;
+        let y = p.1 as usize;
+
+        risk_level += map[x][y] + 1
+    }
+
+    risk_level
+}
+
+fn calc_low_points(map: &Vec<Vec<u32>>) -> Vec<(i32, i32)> {
+    let mut low_points = Vec::new();
 
     for (i, row) in map.iter().enumerate() {
         for (j, point) in row.iter().enumerate() {
@@ -25,12 +40,12 @@ fn calc_risk_level(map: Vec<Vec<u32>>) -> u32 {
             let is_low = calc_low(point, neighbours, &map);
 
             if is_low {
-                risk_level += point + 1
+                low_points.push((i, j));
             }
         }
     }
 
-    risk_level
+    low_points
 }
 
 fn calc_low (point: &u32, neighbours: Vec<(i32, i32)>, map:&Vec<Vec<u32>>) -> bool {
