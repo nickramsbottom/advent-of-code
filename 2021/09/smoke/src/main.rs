@@ -22,18 +22,7 @@ fn calc_risk_level(map: Vec<Vec<u32>>) -> u32 {
             let width = row.len() as i32;
             let height = map.len() as i32;
             let neighbours = find_neighbours((i, j), width, height);
-
-            let mut is_low = true;
-
-            for p in neighbours {
-                let (x, y) = p;
-                let neighbour = map[x as usize][y as usize];
-
-                if point >= &neighbour {
-                    is_low = false;
-                    break;
-                }
-            }
+            let is_low = calc_low(point, neighbours, &map);
 
             if is_low {
                 risk_level += point + 1
@@ -42,6 +31,18 @@ fn calc_risk_level(map: Vec<Vec<u32>>) -> u32 {
     }
 
     risk_level
+}
+
+fn calc_low (point: &u32, neighbours: Vec<(i32, i32)>, map:&Vec<Vec<u32>>) -> bool {
+    for p in neighbours {
+        let (x, y) = p;
+        let neighbour = map[x as usize][y as usize];
+
+        if point >= &neighbour {
+            return false
+        }
+    }
+    return true
 }
 
 fn find_neighbours(point: (i32, i32), width: i32, height: i32) -> Vec<(i32, i32)> {
