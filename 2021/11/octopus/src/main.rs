@@ -30,38 +30,30 @@ fn flash(energy_levels: &mut Vec<Vec<i32>>) -> i32 {
                 *level = *level + 1;
 
                 if *level > 9 {
-                    flash_stack.push((i as i32, j as i32))
+                    flash_stack.push((i, j))
                 }
             }
         }
 
         while let Some(walk_point) = flash_stack.pop() {
-            let i = walk_point.0 as usize;
-            let j = walk_point.1 as usize;
-
-            if has_flashed.contains(&(i, j)) {
+            if has_flashed.contains(&walk_point) {
                 continue;
             }
 
-            has_flashed.insert((i, j));
+            has_flashed.insert(walk_point);
 
             let neighbours = find_neighbours(walk_point, width, height);
 
-            for neighbour in neighbours {
-                let n_i = neighbour.0 as usize;
-                let n_j = neighbour.1 as usize;
-
+            for (n_i, n_j) in neighbours {
                 energy_levels[n_i][n_j] = energy_levels[n_i][n_j] + 1;
 
                 if energy_levels[n_i][n_j] > 9 {
-                    flash_stack.push(neighbour)
+                    flash_stack.push((n_i, n_j))
                 }
             }
         }
 
-        for entry in has_flashed {
-            let n_i = entry.0 as usize;
-            let n_j = entry.1 as usize;
+        for (n_i, n_j) in has_flashed {
             energy_levels[n_i][n_j] = 0;
         }
 
@@ -83,8 +75,9 @@ fn all_zeros(energy_levels: &mut Vec<Vec<i32>>) -> bool {
     return true;
 }
 
-fn find_neighbours(point: (i32, i32), width: i32, height: i32) -> Vec<(i32, i32)> {
-    let (i, j) = point;
+fn find_neighbours(point: (usize, usize), width: i32, height: i32) -> Vec<(usize, usize)> {
+    let i = point.0 as i32;
+    let j = point.1 as i32;
     let candidates: Vec<(i32, i32)> = vec![
         (i + 1, j),
         (i - 1, j),
@@ -102,5 +95,6 @@ fn find_neighbours(point: (i32, i32), width: i32, height: i32) -> Vec<(i32, i32)
             let (x, y) = c;
             (x >= &0) & (x < &height) & (y >= &0) & (y < &width)
         })
+        .map(|(x, y)| (x as usize, y as usize))
         .collect()
 }
