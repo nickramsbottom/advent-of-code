@@ -43,7 +43,6 @@ fn flash(energy_levels: &mut Vec<Vec<i32>>) -> i32 {
                 continue;
             }
 
-            energy_levels[i][j] = 0;
             has_flashed.insert((i, j));
 
             let neighbours = find_neighbours(walk_point, width, height);
