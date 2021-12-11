@@ -17,14 +17,11 @@ fn main() {
 fn flash(energy_levels: &mut Vec<Vec<i32>>) -> i32 {
     let width = energy_levels[0].len() as i32;
     let height = energy_levels.len() as i32;
-    let mut flashed = 0;
 
-    for _step in 0..100 {
-        println!("");
-        for line in energy_levels.clone() {
-            println!("{:?}", line);
-        }
-        println!("");
+    let mut step = 0;
+
+    loop {
+        step += 1;
 
         let mut flash_stack = Vec::new();
         let mut has_flashed = HashSet::new();
@@ -47,7 +44,6 @@ fn flash(energy_levels: &mut Vec<Vec<i32>>) -> i32 {
             }
 
             energy_levels[i][j] = 0;
-            flashed += 1;
             has_flashed.insert((i, j));
 
             let neighbours = find_neighbours(walk_point, width, height);
@@ -69,9 +65,23 @@ fn flash(energy_levels: &mut Vec<Vec<i32>>) -> i32 {
             let n_j = entry.1 as usize;
             energy_levels[n_i][n_j] = 0;
         }
+
+        if all_zeros(energy_levels) {
+            return step;
+        }
+    }
+}
+
+fn all_zeros(energy_levels: &mut Vec<Vec<i32>>) -> bool {
+    for row in energy_levels {
+        for num in row {
+            if *num != 0 {
+                return false;
+            }
+        }
     }
 
-    flashed
+    return true;
 }
 
 fn find_neighbours(point: (i32, i32), width: i32, height: i32) -> Vec<(i32, i32)> {
