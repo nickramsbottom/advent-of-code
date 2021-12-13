@@ -12,7 +12,13 @@ for (line of input) {
     if (!graph[firstCave]) {
         graph[firstCave] = [];
     }
+
+    if (!graph[secondCave]) {
+        graph[secondCave] = [];
+    }
+
     graph[firstCave].push(secondCave);
+    graph[secondCave].push(firstCave);
 }
 
 console.log(graph);
